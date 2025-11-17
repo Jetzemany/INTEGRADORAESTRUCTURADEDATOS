@@ -71,8 +71,13 @@
     function liberarOperador() {
         const id = document.getElementById("liberarId").value;
         fetch(`/api/liberar-operador?id=${encodeURIComponent(id)}`, { method: "POST" })
-            .then(r => r.text()).then(t => document.getElementById("resultado").innerText = t);
+            .then(r => r.text())
+            .then(t => {
+                document.getElementById("resultado").innerText = t;
+                verEstado();
+            });
     }
+
 
     function verEstado() {
         fetch(`/api/estado`).then(r => r.json()).then(j => {

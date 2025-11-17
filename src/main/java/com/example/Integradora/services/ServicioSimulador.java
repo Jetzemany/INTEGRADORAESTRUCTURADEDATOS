@@ -60,14 +60,14 @@ public class ServicioSimulador {
     //Libera un operador por ID (simula que terminó su atención).
     public boolean liberarOperador(int id) {
         for (int i = 0; i < operadores.tamanio(); i++) {
-            Operador op = operadores.obtener(i);
-            if (op.getId() == id) {
-                op.setOcupado(false);
+            if (operadores.obtener(i).getId() == id) {
+                operadores.eliminarEn(i);   // ya se elimina realmente el operador
                 return true;
             }
         }
         return false;
     }
+
 
     //Agrega un nuevo operador al sistema.
 

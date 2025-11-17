@@ -52,10 +52,11 @@ public class ControladorSimulador {
 
     @PostMapping("/liberar-operador")
     public ResponseEntity<?> liberarOperador(@RequestParam int id) {
-        boolean ok = servicio.liberarOperador(id);
-        if (ok) return ResponseEntity.ok("Operador liberado: " + id);
+        boolean ok = servicio.eliminarOperadorPorId(id);  // Lo borra aqui
+        if (ok) return ResponseEntity.ok("Operador eliminado: " + id);
         else return ResponseEntity.badRequest().body("Operador no encontrado: " + id);
     }
+
 
     @GetMapping("/estado")
     public ResponseEntity<Map<String, String>> estado() {
