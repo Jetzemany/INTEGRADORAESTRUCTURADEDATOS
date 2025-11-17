@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador de Atención</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 5px; }
+        #resultado { margin-top: 20px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+<h2>Simulador de Atención al Cliente</h2>
+
+<label>Nombre cliente:</label>
+<input id="nombre" placeholder="Ej. Ana">
+<select id="problema">
+    <option>FACTURACION</option>
+    <option>SOPORTE_TECNICO</option>
+    <option>CANCELACION</option>
+    <option>CONSULTA_GENERAL</option>
+</select>
+<button onclick="crearLlamada()">Registrar llamada</button>
+
+<br><br>
+<button onclick="crearAleatoria()">Crear llamada aleatoria</button>
+
+<br><br>
+<button onclick="atender()">Atender siguiente</button>
+
+<br><br>
+<label>Agregar operador:</label>
+<input id="nombreOp" placeholder="Nombre operador">
+<button onclick="agregarOperador()">Agregar</button>
+
+<br><br>
+<label>Liberar operador (id):</label>
+<input id="liberarId" placeholder="id">
+<button onclick="liberarOperador()">Liberar</button>
+
+<br><br>
+<button onclick="verEstado()">Ver estado (JSON)</button>
+
+<h3>Resultado:</h3>
+<div id="resultado"></div>
+
+<script>
+    function crearLlamada() {
+        const nombre = document.getElementById("nombre").value;
+        const problema = document.getElementById("problema").value;
+        fetch(`/api/crear-llamada?cliente=${encodeURIComponent(nombre)}&problema=${encodeURIComponent(problema)}`, { method: "POST" })
+            .then(r => r.text()).then(t => document.getElementById("resultado").innerText = t);
+    }
+
+    function crearAleatoria() {
+        fetch(`/api/crear-aleatoria`, { method: "POST" })
+            .then(r => r.text()).then(t => document.getElementById("resultado").innerText = t);
+    }
+
+    function atender() {
+        fetch(`/api/atender`, { method: "POST" })
+            .then(r => r.text()).then(t => document.getElementById("resultado").innerText = t);
+    }
+
+    function agregarOperador() {
+        const nombre = document.getElementById("nombreOp").value;
+        fetch(`/api/agregar-operador?nombre=${encodeURIComponent(nombre)}`, { method: "POST" })
+            .then(r => r.text()).then(t => document.getElementById("resultado").innerText = t);
+    }
+
+    function liberarOperador() {
+        const id = document.getElementById("liberarId").value;
+        fetch(`/api/liberar-operador?id=${encodeURIComponent(id)}`, { method: "POST" })
+            .then(r => r.text()).then(t => document.getElementById("resultado").innerText = t);
+    }
+
+    function verEstado() {
+        fetch(`/api/estado`).then(r => r.json()).then(j => {
+            document.getElementById("resultado").innerText = "Operadores: " + j.operadores + "\n\nCola: " + j.cola + "\n\nHistorial: " + j.historial;
+        });
+    }
+</script>
+</body>
+</html>
